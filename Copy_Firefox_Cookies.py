@@ -14,7 +14,7 @@ USAGE:
 import ##WHATEVERYOUNAMEDTHISFILE## as newbrowser
 opener, br, cj=newbrowser.redsbrowser()
 
-you can send any questions to capitanweiner2013@gmail.com
+you can send any questions to capitanwinkie2013@gmail.com
 
 
 """
