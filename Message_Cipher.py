@@ -1,11 +1,25 @@
-#ATTN ALL VIEWERS
-#Please Be Advised that this code is being used in a training
-#exercise and is deliberately NOT SECURE.  Please find another code for
-#anyone who is searching for a secure way of encoding messages to prevent
-#unauthorized viewing.
+########################################
+#ATTENTION THIS INFORMATION HAS BEEN PLACED HERE TO BE USED AS PART OF A TRAINING EXERCISE.  PLEASE DO NOT CONSIDER THIS DATA TO BE FULLY SECURE
 # from http://code.activestate.com/recipes/266586-simple-xor-keyword-encryption/
+######################################
+
+#MESSAGE FROM 5n0wdr1ft:
+#This is pretty much the core part of the code that I use to encrypt my messages that I don't want other people being able to read.  I simply type what I want to say, run it through this code and then it spits out a block of encrypted text at the other side and THAT information is what i send in the message.  Then it is decoded on the other end by the PROPER recipient that I have informed of the decryption key and provided a copy of this code to decypher it.
 
 import os
+
+if os.path.exists('Decoder Dashboard.html')==True:
+    os.remove('Decoder Dashboard.html')
+
+def xor_crypt_string(data, key='awesomepassword', encode=False, decode=False):
+    from itertools import izip, cycle
+    import base64
+    if decode:
+        data = base64.decodestring(data)
+    xored = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in izip(data, cycle(key)))
+    if encode:
+        return base64.encodestring(xored).strip()
+    return xored
 
 """The Unique_User_Modifier is information unique to each user that is used by the program to slightly modifiy the output, making the operation COMPLETELY unique to each user and thus impossible to forceibly decode.  Please remember to keep your Unique_User_Modifier information hidden and apart from the rest of your script!  If an outside party obtains this information they could gain authorization as you!
 """
@@ -21,20 +35,17 @@ def encryptedfileparser():
     f.close()
     bro=webbrowser.open('file:\\'+pathex)
 
-def xor_crypt_string(data, key='awesomepassword', encode=False, decode=False):
-    from itertools import izip, cycle
-    import base64
-    if decode:
-        data = base64.decodestring(data)
-    xored = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in izip(data, cycle(key)))
-    if encode:
-        return base64.encodestring(xored).strip()
-    return xored
-
+def execute():
+    from cStringIO import StringIO
+    fileslocation='XXXXXXX' ##Nice Try, not gonna make it that easy for you
+    if fileslocation!='XXXXXXX':
+        urlpointer="folderview?id=0B2L4m-igEjnnN2ZfOVBacktRbkk&usp=sharing"
+        f=StringIO(fileslocation+urlpointer+'\emailmessage.txt')
+    if os.path.exists('emailmessage.txt')==True:
+        f=open('emailmessage.txt', 'r')
+    data=f.read()
+    secret_data = data
+    print xor_crypt_string(secret_data, encode=True)
+    #print xor_crypt_string(xor_crypt_string(secret_data, encode=True), decode=True)
 encryptedfileparser()
-
-##f=open('emailmessage.txt', 'r')
-##data=f.read()
-##secret_data = data
-##print xor_crypt_string(secret_data, encode=True)
-##print xor_crypt_string(xor_crypt_string(secret_data, encode=True), decode=True)
+execute()
