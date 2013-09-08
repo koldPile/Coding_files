@@ -54,9 +54,9 @@ def main():
     if os.path.exists('message.txt')==True:
         f=open('message.txt', 'r')
         message=f.read()
-    msg= encrypt_a_message(message, 'ullneverguess')
+    msg= encrypt_a_message(message, '')
     print msg
-    print decrypt_a_message(msg, 'ullneverguess')
+    print decrypt_a_message(msg, '')
 
 if __name__ == '__main__':
     atexit.register(kleenup())
